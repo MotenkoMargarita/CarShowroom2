@@ -1,0 +1,38 @@
+CREATE TABLE public.car_type
+(
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    name character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT car_type_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE public.car
+(
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    type_id bigint NOT NULL,
+    model character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    name character varying(200) COLLATE pg_catalog."default" NOT NULL,
+    is_sold boolean NOT NULL,
+    CONSTRAINT car_pkey PRIMARY KEY (id),
+    CONSTRAINT fk_type_id FOREIGN KEY (type_id)
+        REFERENCES public.car_type (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);
+
+CREATE TABLE public.client
+(
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    car_id bigint NOT NULL,
+    name character varying COLLATE pg_catalog."default" NOT NULL,
+    age integer NOT NULL,
+    is_man boolean NOT NULL,
+    CONSTRAINT client_pkey PRIMARY KEY (id),
+    CONSTRAINT fk_car_id FOREIGN KEY (car_id)
+        REFERENCES public.car (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
+
+INSERT INTO car_type(name)
+	VALUES ('SEDAN'), ('COUPE'), ('SPORTS'), ('CROSSOVER'), ('WAGON');
